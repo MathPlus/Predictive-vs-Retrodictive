@@ -1,0 +1,35 @@
+<html>
+
+    <head>
+        <script type="text/javascript" src="../predictive-vs-retrodictive.js"></script>
+    </head>
+
+    <body>
+
+    <h1>Metrics of Binary Classifier Performance</h1>
+    
+    <h2>From Retrodictive to Predictive</h2>
+    <p id="debug1"></p>
+    
+    <h2>From Predictive to Retrodictive</h2>
+    <p id="debug2"></p>
+
+    <script>
+    
+        const n1 = 20 ;
+        const rTPR = 0.8 ;
+        const rFPR = 0.1 ;
+        const id_display_area1 = "debug1" ;
+        test__rTPR_rFPR__to__pTPR_pFNR( n1 , rTPR , rFPR , id_display_area1 ) ;
+    
+        const n2 = 20 ;
+        const pTPR = 0.8 ;
+        const pFNR = 0.1 ;
+        const id_display_area2 = "debug2" ;
+        test__pTPR_pFNR__to__rTPR_rFPR( n2 , pTPR , pFNR , id_display_area2 ) ;
+        
+    </script>
+
+    </body>
+    
+</html>
