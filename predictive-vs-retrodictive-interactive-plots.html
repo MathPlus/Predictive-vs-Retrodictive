@@ -1,0 +1,40 @@
+<html>
+
+    <head>
+        <script type="text/javascript" src="predictive-vs-retrodictive-interactive-plots.js"></script>
+        <script type="text/javascript" src="../js-library/utilities.js"></script>
+    </head>
+
+    <body>
+
+    <h1>Metrics of Binary Classifier Performance</h1>
+    
+    <h2>From Retrodictive to Predictive</h2>
+    <div id="AreaA1"></div>
+    <div id="AreaA2"></div>
+    
+    <h2>From Predictive to Retrodictive</h2>
+    <div id="AreaB1"></div>
+    <div id="AreaB2"></div>
+
+    <script>
+    
+        const n1 = 10 ;
+        const rTPR = 0.8 ;
+        const rFPR = 0.1 ;
+        const idAreaA1 = "AreaA1" ;
+        const idAreaA2 = "AreaA2" ;
+        test__rTPR_rFPR__to__pTPR_pFNR( n1 , rTPR , rFPR , idAreaA1 , idAreaA2 ) ;
+    
+        const n2 = 10 ;
+        const pTPR = 0.9 ;
+        const pFNR = 0.05 ;
+        const idAreaB1 = "AreaB1" ;
+        const idAreaB2 = "AreaB2" ;
+        test__pTPR_pFNR__to__rTPR_rFPR( n2 , pTPR , pFNR , idAreaB1 , idAreaB2 ) ;
+        
+    </script>
+
+    </body>
+    
+</html>
