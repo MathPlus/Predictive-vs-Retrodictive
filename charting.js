@@ -14,6 +14,7 @@ function init_chartOptions()
     var chartOptions_init = {} ;
     
     chartOptions_init.title = 'Chart title TBD' ;
+    chartOptions_init.titlePosition = 'none' ;
     chartOptions_init.curveType = 'function' ;
     chartOptions_init.selectionMode = 'multiple' ;
     
@@ -33,6 +34,7 @@ function init_chartOptions()
     
     chartOptions_init.legend = {} ;
     chartOptions_init.legend.position = 'top' ;
+    chartOptions_init.legend.alignment = 'center' ;
     chartOptions_init.legend.textStyle = {} ;
     chartOptions_init.legend.textStyle.bold = true ;
     
@@ -59,10 +61,15 @@ function init_chartOptions()
     chartOptions_init.crosshair.color = 'grey' ;
     
     chartOptions_init.my_options = {} ;
+    
     chartOptions_init.my_options.dataColHdr = [] ;
     chartOptions_init.my_options.dataColHdr[0] = 'Col hdr 0 TBD' ;
     chartOptions_init.my_options.dataColHdr[1] = 'Col hdr 1 TBD' ;
     chartOptions_init.my_options.dataColHdr[2] = 'Col hdr 2 TBD' ;
+    
+    chartOptions_init.my_options.sliderHdr = [] ;
+    chartOptions_init.my_options.sliderHdr[0] = 'Sldr hdr 0 TBD' ;
+    chartOptions_init.my_options.sliderHdr[1] = 'Sldr hdr 1 TBD' ;
     
     return chartOptions_init ;
 }
@@ -71,11 +78,17 @@ function init_chartOptions()
 function setup_retrodictive_to_predictive(chartOptions_in)
 {
     var chartOptions_out = chartOptions_in ;
+    
     chartOptions_out.title = 'Metrics of binary classifier performance: from Retrodictive to Predictive' ;
     chartOptions_out.hAxis.title = 'Proportion of observed positive class' ;
+    
     chartOptions_out.my_options.dataColHdr[0] = 'ObsvPosCl' ;
     chartOptions_out.my_options.dataColHdr[1] = 'pTPR' ;
     chartOptions_out.my_options.dataColHdr[2] = 'pFNR' ;
+    
+    chartOptions_init.my_options.sliderHdr[0] = 'TPR' ;
+    chartOptions_init.my_options.sliderHdr[1] = 'FPR' ;
+    
     return chartOptions_out ;
 }
 
@@ -83,11 +96,17 @@ function setup_retrodictive_to_predictive(chartOptions_in)
 function setup_predictive_to_retrodictive(chartOptions_in)
 {
     var chartOptions_out = chartOptions_in ;
+    
     chartOptions_out.title = 'Metrics of binary classifier performance: from Predictive to Retrodictive' ;
     chartOptions_out.hAxis.title = 'Proportion of predicted positive class' ;
+    
     chartOptions_out.my_options.dataColHdr[0] = 'PredPosCl' ;
     chartOptions_out.my_options.dataColHdr[1] = 'TPR' ;
     chartOptions_out.my_options.dataColHdr[2] = 'FPR' ;
+    
+    chartOptions_init.my_options.sliderHdr[0] = 'pTPR' ;
+    chartOptions_init.my_options.sliderHdr[1] = 'pFNR' ;
+    
     return chartOptions_out ;
 }
 
@@ -106,9 +125,9 @@ function init_chartData()
 }
 
 
-var chartOptions = init_chartOptions() ;
-chartOptions = setup_retrodictive_to_predictive(chartOptions) ;
-//chartOptions = setup_predictive_to_retrodictive(chartOptions) ;
+var chartOptions_init = init_chartOptions() ;
+chartOptions = setup_retrodictive_to_predictive(chartOptions_init) ;
+//chartOptions = setup_predictive_to_retrodictive(chartOptions_init) ;
 
 var chartData = init_chartData() ;
 
@@ -131,4 +150,18 @@ function drawChart()
     var dispArea = document.getElementById('retro-to-pred') ;
     var chart = new google.visualization.LineChart(dispArea) ;
     chart.draw( dataTable , chartOptions) ;
+}
+
+
+function get_slider_label( slider_header , slider_value , slider_value_display_area )
+{
+    const slider_label = "<b>" + slider_header + " = " + slider_value + "\%</b>" ;
+    return slider_label ;
+}
+
+
+function slider_oninput( slider_header , slider_value , slider_value_display_area , which_slider )
+{
+    slider_label = get_slider_label( slider_header , slider_value , slider_value_display_area ) ;
+    slider_value_display_area.innerHTML = slider_label ;
 }
