@@ -162,6 +162,27 @@ function get_slider_label( slider_header , slider_value , slider_value_display_a
 
 function slider_oninput( slider_header , slider_value , slider_value_display_area , which_slider )
 {
+    if ( ( which_slider != 1 ) && ( which_slider != 2 ) )
+    {
+        alert('slider_oninput:\nBad programmatic error:\nUnrecognized slider number ' + which_slider) ;
+        return ;
+    }
+    
     slider_label = get_slider_label( slider_header , slider_value , slider_value_display_area ) ;
     slider_value_display_area.innerHTML = slider_label ;
+    
+    if ( which_slider == 1 )
+    {
+        y1 = slider_value / 100 ;
+    }
+    if ( which_slider == 2 )
+    {
+        y2 = slider_value / 100 ;
+    }
+        
+    z = h( t , y1 , y2 ) ;
+    z1 = z._1 ;
+    z2 = z._2 ;
+    
+    drawChart() ;
 }
