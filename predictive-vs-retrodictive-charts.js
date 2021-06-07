@@ -2,6 +2,78 @@ google.charts.load( 'current' ,  { 'packages' : [ 'corechart' ] } ) ;
 google.charts.setOnLoadCallback(chartLoadCallback) ;
 
 
+function g( t , u , v )
+{
+    let y = [] ;
+    for ( let i = 0 ; i < t.length ; i++ )
+    {
+        y[i] = u / ( u + t[i] * v ) ;
+    }
+    return y ;
+}
+
+
+function h1( t , y1 , y2 )
+{
+    return g( t , y1 , y2 ) ;
+}
+
+
+function h2( t , y1 , y2 )
+{
+    return g( t , 1 - y1 , 1 - y2 ) ;
+}
+
+
+function get_x_and_t(n)
+{
+    let x_and_t = {} ;
+    x_and_t.x = [] ;
+    x_and_t.t = [] ;
+    for ( let i = 0 ; i <= n ; i++ )
+    {
+        x_and_t.x[i] = i / n ;
+        x_and_t.t[i] = ( n - i ) / i ;
+    }
+    return x_and_t ;
+}
+
+
+function test_h( n , y1 , y2 , idArea1 , idArea2 )
+{
+    const x_and_t = get_x_and_t(n) ;
+    const x = x_and_t.x ;
+    const t = x_and_t.t ;
+    const z1 = h1( t , y1 , y2 ) ;
+    const z2 = h2( t , y1 , y2 ) ;
+    
+    document.getElementById(idArea1).innerHTML
+        = "n = " + n + "<br/>y1 = " + y1 + "<br/>y2 = " + y2 ;
+     
+    let col1_spec    = {} ;
+    col1_spec.header = "x" ;
+    col1_spec.data   = x ;
+    
+    let col2_spec    = {} ;
+    col2_spec.header = "t" ;
+    col2_spec.data   = t ;
+    
+    let col3_spec    = {} ;
+    col3_spec.header = "z1" ;
+    col3_spec.data   = z1 ;
+    
+    let col4_spec    = {} ;
+    col4_spec.header = "z2" ;
+    col4_spec.data   = z2 ;
+    
+    col_spec = [ col1_spec , col2_spec , col3_spec , col4_spec ] ;
+    
+    table = make_table_A(col_spec) ;
+    
+    document.getElementById(idArea2).appendChild(table) ;
+}
+
+
 function chartLoadCallback()
 {
     drawChart() ;
@@ -11,7 +83,7 @@ function chartLoadCallback()
 
 function init_chartOptions()
 {
-    var chartOptions_init = {} ;
+    let chartOptions_init = {} ;
     
     chartOptions_init.title = 'Chart title TBD' ;
     chartOptions_init.titlePosition = 'none' ;
@@ -77,7 +149,7 @@ function init_chartOptions()
 
 function setup_retrodictive_to_predictive(chartOptions_in)
 {
-    var chartOptions_out = chartOptions_in ;
+    let chartOptions_out = chartOptions_in ;
     
     chartOptions_out.title = 'Metrics of binary classifier performance: from Retrodictive to Predictive' ;
     chartOptions_out.hAxis.title = 'Proportion of observed positive class' ;
@@ -95,7 +167,7 @@ function setup_retrodictive_to_predictive(chartOptions_in)
 
 function setup_predictive_to_retrodictive(chartOptions_in)
 {
-    var chartOptions_out = chartOptions_in ;
+    let chartOptions_out = chartOptions_in ;
     
     chartOptions_out.title = 'Metrics of binary classifier performance: from Predictive to Retrodictive' ;
     chartOptions_out.hAxis.title = 'Proportion of predicted positive class' ;
@@ -113,7 +185,7 @@ function setup_predictive_to_retrodictive(chartOptions_in)
 
 function init_chartData()
 {
-    var chartData_init = [ chartOptions.my_options.dataColHdr ] ;
+    let chartData_init = [ chartOptions.my_options.dataColHdr ] ;
     
     for ( let i = 0 ; i <= n ; i++ )
     {
@@ -125,13 +197,6 @@ function init_chartData()
 }
 
 
-var chartOptions_init = init_chartOptions() ;
-chartOptions = setup_retrodictive_to_predictive(chartOptions_init) ;
-//chartOptions = setup_predictive_to_retrodictive(chartOptions_init) ;
-
-var chartData = init_chartData() ;
-
-
 function drawChart()
 {
     for ( let i = 0 ; i <= n ; i++ )
@@ -140,16 +205,18 @@ function drawChart()
         chartData[i+1][2] = z2[i] ;
     }
 
-    var dataTable = google.visualization.arrayToDataTable(chartData) ;
+    let dataTable = google.visualization.arrayToDataTable(chartData) ;
     
-    var pct_formatter = new google.visualization.NumberFormat( { fractionDigits : 3 , pattern : '#.#%' } ) ;
+    const pct_formatter = new google.visualization.NumberFormat
+                              ( { fractionDigits : 3 , pattern : '#.#%' } ) ;
+    
     pct_formatter.format( dataTable , 0 ) ;
     pct_formatter.format( dataTable , 1 ) ;
     pct_formatter.format( dataTable , 2 ) ;
 
-    var dispArea = document.getElementById('retro-to-pred') ;
-    var chart = new google.visualization.LineChart(dispArea) ;
-    chart.draw( dataTable , chartOptions) ;
+    const dispArea = document.getElementById('div_chart') ;
+    let chart = new google.visualization.LineChart(dispArea) ;
+    chart.draw( dataTable , chartOptions ) ;
 }
 
 
@@ -179,10 +246,57 @@ function slider_oninput( slider_header , slider_value , slider_value_display_are
     {
         y2 = slider_value / 100 ;
     }
-        
-    z = h( t , y1 , y2 ) ;
-    z1 = z._1 ;
-    z2 = z._2 ;
+    
+    z1 = h1( t , y1 , y2 ) ;
+    z2 = h2( t , y1 , y2 ) ;
     
     drawChart() ;
 }
+        
+ 
+const n = 100 ;
+const x_and_t = get_x_and_t(n) ;
+const x = x_and_t.x ;
+const t = x_and_t.t ;
+
+const Y1 = 80 ;
+const Y2 = 10 ;
+
+let y1 = Y1 / 100 ;
+let y2 = Y2 / 100 ;
+
+let z1 = h1( t , y1 , y2 ) ;
+let z2 = h2( t , y1 , y2 ) ;
+
+const chartOptions_init = init_chartOptions() ;
+let chartOptions = {} ;
+
+switch (direction)
+{
+    case "retrodictive_to_predictive" :
+        chartOptions = setup_retrodictive_to_predictive(chartOptions_init) ;
+        break ;
+    case "predictive_to_retrodictive" :
+        chartOptions = setup_predictive_to_retrodictive(chartOptions_init) ;
+        break ;
+    default :
+        alert("Unrecognized direction [" + direction + "]") ;
+}
+
+document.title = chartOptions.title ;
+
+let chartData = init_chartData() ;
+
+document.getElementById("span_title").textContent = chartOptions.title ;
+document.getElementById("input_slider1").value = Y1 ;
+document.getElementById("input_slider2").value = Y2 ;
+
+let input_slider1 = document.getElementById("input_slider1") ;
+let value_slider1 = document.getElementById("value_slider1") ;
+value_slider1.innerHTML = get_slider_label( chartOptions.my_options.sliderHdr[0] , input_slider1.value , value_slider1 ) ;
+input_slider1.oninput = function() { slider_oninput( chartOptions.my_options.sliderHdr[0] , input_slider1.value , value_slider1 , 1 ) ; } ;
+
+let input_slider2 = document.getElementById("input_slider2") ;
+let value_slider2 = document.getElementById("value_slider2") ;
+value_slider2.innerHTML = get_slider_label( chartOptions.my_options.sliderHdr[1] , input_slider2.value , value_slider2 ) ;
+input_slider2.oninput = function() { slider_oninput( chartOptions.my_options.sliderHdr[1] , input_slider2.value , value_slider2 , 2 ) ; } ;
